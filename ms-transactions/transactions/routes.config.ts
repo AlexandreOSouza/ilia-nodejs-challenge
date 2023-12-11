@@ -12,8 +12,10 @@ export class TransactionRoutes extends CommonRoutesConfig {
     this.app
       .route(`/transactions`)
       .get(TransactionController.getTransactions)
-      // Add validadtion to post body
-      .post(TransactionController.createTransaction);
+      .post(
+        TransactionMiddleware.validateRequestBody,
+        TransactionController.createTransaction,
+      );
     this.app.param(`userId`, TransactionMiddleware.extractUserId);
     this.app
       .route(`/transactions/:userId`)

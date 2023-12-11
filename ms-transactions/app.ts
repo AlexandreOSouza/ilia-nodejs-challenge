@@ -9,7 +9,7 @@ import * as expressWinston from "express-winston";
 
 const app: express.Application = express();
 const routes: Array<CommonRoutesConfig> = [];
-const port = 3000;
+const port = process.env.TEST ? 0 : 3000;
 const debugLog: debug.IDebugger = debug("app");
 
 app.use(express.json());
@@ -43,3 +43,5 @@ app.listen(port, () => {
 
   console.log(runningMessage);
 });
+
+export default app;
