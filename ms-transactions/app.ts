@@ -4,8 +4,11 @@ import { TransactionRoutes } from "./transactions/routes.config";
 import { CommonRoutesConfig } from "./common/routes.config";
 import debug from "debug";
 
+import swaggerUi from "swagger-ui-express";
+
 import * as winston from "winston";
 import * as expressWinston from "express-winston";
+import { swaggerDocument } from "./swagger";
 
 const app: express.Application = express();
 const routes: Array<CommonRoutesConfig> = [];
@@ -14,6 +17,9 @@ const debugLog: debug.IDebugger = debug("app");
 
 app.use(express.json());
 app.use(cors());
+
+app.use("/api-docs", swaggerUi.serve);
+app.get("/api-docs", swaggerUi.setup(swaggerDocument));
 
 const loggerOptions: expressWinston.LoggerOptions = {
   transports: [new winston.transports.Console()],
