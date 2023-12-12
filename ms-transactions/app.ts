@@ -3,12 +3,15 @@ import cors from "cors";
 import { TransactionRoutes } from "./transactions/routes.config";
 import { CommonRoutesConfig } from "./common/routes.config";
 import debug from "debug";
+import { connect } from "mongoose";
 
 import swaggerUi from "swagger-ui-express";
 
 import * as winston from "winston";
 import * as expressWinston from "express-winston";
 import { swaggerDocument } from "./swagger";
+
+import "dotenv/config";
 
 const app: express.Application = express();
 const routes: Array<CommonRoutesConfig> = [];
@@ -41,6 +44,12 @@ app.get("/", (req, res) => {
 routes.push(new TransactionRoutes(app));
 
 const runningMessage = `Server running at http://localhost:${port}`;
+
+if (process.env.TEST) {
+  connect(process.env.DATABASE_TEST_URL as string);
+} else {
+  connect(process.env.DATABASE_URL as string);
+}
 
 app.listen(port, () => {
   routes.forEach((route: CommonRoutesConfig) => {

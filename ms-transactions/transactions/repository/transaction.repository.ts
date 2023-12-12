@@ -1,26 +1,28 @@
 import { CreateTransactionDTO } from "../dto/create.transaction";
+import { Transaction } from "../model/transaction.model";
 
 class TransactionRepository {
   transactions: Array<CreateTransactionDTO> = [];
 
-  // TODO: Implement database access
   async addTransaction(
     transaction: CreateTransactionDTO,
   ): Promise<CreateTransactionDTO> {
-    this.transactions.push(transaction);
-    return transaction;
+    const trans = new Transaction({ ...transaction });
+    await trans.save();
+
+    return trans;
   }
 
   async getTransactions(): Promise<Array<CreateTransactionDTO>> {
-    return this.transactions;
+    const transactions = Transaction.find();
+    return transactions;
   }
 
   async getTransactionByUserId(
     userId: string,
   ): Promise<Array<CreateTransactionDTO>> {
-    return this.transactions.filter(
-      (transaction: CreateTransactionDTO) => transaction.userId === userId,
-    );
+    const transactions = Transaction.find().all("userId", [userId]);
+    return transactions;
   }
 }
 
